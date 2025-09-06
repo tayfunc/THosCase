@@ -20,9 +20,12 @@
     {
         private readonly IProductRepository _repository;
 
-        public ProductService(IProductRepository repository)
+        private readonly IProductPropertyRepository _productPropertyRepository;
+
+        public ProductService(IProductRepository repository, IProductPropertyRepository productPropertyRepository)
         {
             _repository = repository;
+            _productPropertyRepository = productPropertyRepository;
         }
 
         /// <summary>
@@ -51,6 +54,17 @@
                 return ServiceResult.Failed<ProductModel>(ServiceError.ProductAddFailed);
             }
 
+            if (requestModel.ProductProperties.Length > 0)
+            {
+                List<ProductProperty> productProperties = requestModel.ProductProperties.Split(',').Select(x => new ProductProperty
+                {
+                    ProductId = requestModel.ProductId,
+                    PropertyId = Convert.ToInt32(x)
+                }).ToList();
+
+                _productPropertyRepository.AddRange(productProperties);
+            }
+
             ProductModel productModel = mapper.Map<ProductModel>(product);
 
             return ServiceResult.Success(productModel);
@@ -73,7 +87,7 @@
             var folderPath = HttpContext.Current.Server.MapPath("~/Uploads/Images/");
             if (File.Exists(folderPath + product.ImagePath))
             {
-                File.Delete(folderPath + product.ImagePath); 
+                File.Delete(folderPath + product.ImagePath);
             }
 
             return ServiceResult.Success(product);
@@ -108,6 +122,11 @@
 
             List<ProductModel> productModels = mapper.Map<List<ProductModel>>(products);
 
+            productModels.ForEach(i =>
+            {
+                i.ProductProperties = string.Join(",", _productPropertyRepository.GetByProductId(i.ProductId).Select(x => x.PropertyId).ToList());
+            });
+
             return ServiceResult.Success(productModels);
         }
 
@@ -127,6 +146,19 @@
             Product productDto = mapper.Map<Product>(requestModel);
 
             _repository.Update(productDto);
+
+            if (requestModel.ProductProperties.Length > 0)
+            {
+                List<ProductProperty> productProperties = requestModel.ProductProperties.Split(',').Where(x => x != "0").Select(x => new ProductProperty
+                {
+                    ProductId = requestModel.ProductId,
+                    PropertyId = Convert.ToInt32(x)
+                }).ToList();
+
+                _productPropertyRepository.DeleteByProductId(requestModel.ProductId);
+
+                _productPropertyRepository.AddRange(productProperties);
+            }
 
             ProductModel productModel = mapper.Map<ProductModel>(productDto);
 

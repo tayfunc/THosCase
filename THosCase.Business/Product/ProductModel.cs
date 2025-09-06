@@ -1,6 +1,7 @@
 ﻿namespace THosCase.Business
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Product Model
@@ -56,5 +57,10 @@
         /// Creator User Name
         /// </summary>
         public string CreatorUserName { get; set; }
+
+        /// <summary>
+        /// Product Properties
+        /// </summary>
+        public string ProductProperties { get; set; }
     }
 }

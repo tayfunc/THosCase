@@ -12,62 +12,50 @@
     /// <summary>
     /// Product Property Controller
     /// </summary>
-    public class ProductPropertyController : Controller
+    public class PropertyController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly IPropertyService _propertyService;
 
-        private readonly IProductPropertyService _productPropertyService;
-
-        public ProductPropertyController(IProductPropertyService productPropertyService, IProductService productService)
+        public PropertyController(IPropertyService propertyService)
         {
-            _productPropertyService = productPropertyService;
-
-            _productService = productService;
+            _propertyService = propertyService;
         }
 
         public ActionResult Index()
         {
-            var products = _productService.GetAll();
+            var properties = _propertyService.GetAll();
 
-            var productProperties = _productPropertyService.GetAll();
-
-            var vmProductProperty = new ProductPropertyViewModel
+            var vmProperty = new PropertyViewModel
             {
-                Products = products.Data,
-                PageTitle = "Ürün Özellikleri"
+                Properties = properties.Data,
+                PageTitle = "Özellikler"
             };
 
-            ViewBag.Products = products.Data;
-
-            return View(vmProductProperty);
+            return View(vmProperty);
         }
 
         [HttpGet]
         public ActionResult Add()
         {
-            var products = _productService.GetAll();
+            var properties = _propertyService.GetAll();
 
-            var productProperties = _productPropertyService.GetAll();
-
-            var vmCategory = new ProductPropertyViewModel
+            var vmCategory = new PropertyViewModel
             {
-                Products = products.Data,
-                PageTitle = "Ürün Özellikleri"
+                Properties = properties.Data,
+                PageTitle = "Özellikler"
             };
 
-            ViewBag.Products = products.Data;
-
-            return PartialView("_AddProductPropertyPartial");
+            return PartialView("_AddPropertyPartial");
         }
 
         [HttpPost]
-        public ActionResult Add(ProductPropertyRequestModel requestModel)
+        public ActionResult Add(PropertyRequestModel requestModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ServiceResult result = _productPropertyService.Add(requestModel);
+                    ServiceResult result = _propertyService.Add(requestModel);
 
                     if (!result.Succeeded)
                         TempData["SuccessMessage"] = result.Error.Message;
@@ -85,13 +73,13 @@
 
         [HttpPost]
         [Route("Update")]
-        public ActionResult Update(ProductPropertyRequestModel requestModel)
+        public ActionResult Update(PropertyRequestModel requestModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ServiceResult result = _productPropertyService.Update(requestModel);
+                    ServiceResult result = _propertyService.Update(requestModel);
 
                     if (!result.Succeeded)
                         TempData["SuccessMessage"] = result.Error.Message;
@@ -115,7 +103,7 @@
             {
                 try
                 {
-                    ServiceResult result = _productPropertyService.Delete(id);
+                    ServiceResult result = _propertyService.Delete(id);
 
                     if (!result.Succeeded)
                     {

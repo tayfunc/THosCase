@@ -6,6 +6,7 @@ namespace THosCase
     using THosCase.Business.Intefaces;
     using THosCase.Business.Product;
     using THosCase.Business.ProductProperty;
+    using THosCase.Business.Property;
     using THosCase.Business.User;
 
     using THosCase.Data.Context;
@@ -32,6 +33,8 @@ namespace THosCase
 
             container.RegisterType<IProductRepository, ProductRepository>();
 
+            container.RegisterType<IPropertyRepository, PropertyRepository>();
+
             container.RegisterType<IProductPropertyRepository, ProductPropertyRepository>();
 
             // Service registration
@@ -40,6 +43,8 @@ namespace THosCase
             container.RegisterType<IUserService, UserService>();
 
             container.RegisterType<IProductService, ProductService>();
+
+            container.RegisterType<IPropertyService, PropertyService>();
 
             container.RegisterType<IProductPropertyService, ProductPropertyService>();
 

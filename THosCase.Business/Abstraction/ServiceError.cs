@@ -36,8 +36,10 @@
 
         public static ServiceError ProductDeleteFailed => new ServiceError("Ürün silme işleminde hata", 986);
 
-        public static ServiceError ProductPropertyAddFailed => new ServiceError("Ürün özelliği ekleme işleminde hata", 985);
+        public static ServiceError PropertyAddFailed => new ServiceError("Özellik ekleme işleminde hata", 985);
 
-        public static ServiceError ProductPropertyDeleteFailed => new ServiceError("Ürün özelliği silme işleminde hata", 984);
+        public static ServiceError PropertyDeleteFailed => new ServiceError("Özellik silme işleminde hata", 984);
+
+        public static ServiceError ProductPropertyDeleteFailed => new ServiceError("Ürün silme işleminde hata", 983);
     }
 }

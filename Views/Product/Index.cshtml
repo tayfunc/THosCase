@@ -50,11 +50,19 @@
                             data-id="@product.ProductId"
                             data-name="@product.ProductName"
                             data-category-id="@product.CategoryId"
-                            data-price="@product.Price">
+                            data-price="@product.Price"
+                            data-property-id="@string.Join(",", product.ProductProperties?.ToArray())">
                         <i class="fas fa-edit"></i> Güncelle
                     </button>
 
                     <!-- Sil Butonu -->
+                    <button type="button" class="btn btn-success btn-sm product-property-btn" id="addNewProperty"
+                            data-id="@product.ProductId"
+                            data-product-name="@product.ProductName">
+                        <i class="fas fa-plus"></i> Özellik Ekle
+                    </button>
+                    
+    <!-- Sil Butonu -->
                     <button type="button" class="btn btn-danger btn-sm delete-btn"
                             data-id="@product.ProductId"
                             data-product-name="@product.ProductName">
@@ -90,6 +98,17 @@
                             @foreach (var category in ViewBag.Categories as List<THosCase.Business.CategoryModel>)
                             {
                                 <option value="@category.CategoryId">@category.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="propertyId" class="form-label">Özellik</label>
+                        <select class="form-control" id="propertyId" name="PropertyId" required="false" multiple="multiple">
+                            <option value="0">-- Özellik Seçin --</option>
+                            @foreach (var property in ViewBag.Properties as List<THosCase.Business.PropertyModel>)
+                            {
+                                <option value="@property.PropertyId">@property.PropertyKey - @property.PropertyValue</option>
                             }
                         </select>
                     </div>
@@ -144,20 +163,13 @@
                     $('#addModal').modal('show');
 
                     $('#addProduct').off('click').on('click', function () {
-                        //$('#addForm').serialize()
-                        //var formData = {
-                        //    "ProductName": $("#addForm #addProductName").val(),
-                        //    "CategoryId": $("#addForm #addCategoryId").val(),
-                        //    "Price": $("#addForm #addProductPrice").val(),
-                        //    "ImagePath": $("#addForm #addProductImage").val()
-                        //};
-
                         var formData = new FormData();
 
                         formData.append('ProductName', $('#addForm #addProductName').val());
                         formData.append('CategoryId', $('#addForm #addCategoryId').val());
                         formData.append('Price', $('#addForm #addProductPrice').val());
                         formData.append('ImagePath', $('#addForm #addProductImage').val());
+                        formData.append('ProductProperties', $('#addForm #addPropertyId').val());
 
                         var fileInput = $('#addForm #addProductImage')[0];
                         if (fileInput.files.length > 0) {
@@ -188,8 +200,60 @@
             });
         });
 
+        // Yeni ozellik ekle butonu
+        $('#addNewProperty').click(function () {
+            // Modal içeriğini AJAX ile yükle
+            var productId = $(this).data('id');
+
+            $.ajax({
+                url: '@Url.Action("AddProductProperty", "Product")',
+                type: 'GET',
+                success: function (data) {
+                    // Eğer modal zaten varsa kaldır
+                    if ($('#addPropertyModal').length) {
+                        $('#addPropertyModal').remove();
+                    }
+
+                    $('body').append(data);
+
+                    $('#addPropertyModal').modal('show');
+
+                    $('#addProductProperty').off('click').on('click', function () {
+                        var formData = new FormData();
+                        
+                        formData.append('ProductId', productId);
+                        formData.append('PropertyId', $('#addPropertyForm #addPropertyId').val());
+
+                        $.ajax({
+                            url: '@Url.Action("AddProperty", "Product")',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                $('#addModal').modal('hide');
+                                location.reload();
+                            },
+                            error: function (xhr, status, error) {
+                                var errorMessage = xhr.responseJSON.errors.join('\n');
+
+                                alert('Bir hata oluştu!\n\n' + errorMessage);
+                            }
+                        });
+                    });
+                },
+                error: function () {
+                    alert('Form yüklenirken hata oluştu!');
+                }
+            });
+        });
+
         // Modal kapandığında temizle
         $('body').on('hidden.bs.modal', '#addModal', function () {
+            $(this).remove();
+        });
+
+        $('body').on('hidden.bs.modal', '#addPropertyModal', function () {
             $(this).remove();
         });
 
@@ -200,23 +264,24 @@
             var productName = button.data('name');
             var categoryId = button.data('category-id');
             var price = button.data('price');
+            var propertyId = button.data('property-id').toString();
 
             var modal = $(this);
             modal.find('#productId').val(productId);
             modal.find('#productName').val(productName);
             modal.find('#categoryId').val(categoryId);
             modal.find('#productPrice').val(price);
+
+            if (propertyId.includes(',')) {
+                modal.find("#propertyId").val(propertyId.split(','));
+            } else {
+                modal.find("#propertyId").val(propertyId);
+            }
+            
         });
 
         // Kaydet butonu click event
         $('#saveChanges').click(function () {
-            //var formData = {
-            //    "ProductId": $("#updateForm #productId").val(),
-            //    "ProductName": $("#updateForm #productName").val(),
-            //    "CategoryId": $("#updateForm #categoryId").val(),
-            //    "Price": $("#updateForm #productPrice").val(),
-            //    "ImagePath": $("#updateForm #productImage").val()
-            //};
 
             var formData = new FormData();
 
@@ -225,6 +290,7 @@
             formData.append('CategoryId', $('#updateForm #categoryId').val());
             formData.append('Price', $('#updateForm #productPrice').val());
             formData.append('ImagePath', $('#updateForm #productImage').val());
+            formData.append('ProductProperties', $('#updateForm #propertyId').val());
 
             var fileInput = $('#updateForm #productImage')[0];
             if (fileInput.files.length > 0) {

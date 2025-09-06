@@ -1,41 +1,37 @@
 ﻿namespace THosCase.Data.Interfaces
 {
     using System.Collections.Generic;
+
     using THosCase.Data.Context;
 
     /// <summary>
-    /// Interface of Product Repository
+    /// Interface of Property Repository
     /// </summary>
-    public interface IProductRepository
+    public interface IPropertyRepository
     {
         /// <summary>
         /// Get
         /// </summary>
-        Product Get(int productId);
+        Property Get(int propertyId);
 
         /// <summary>
         /// Get All
         /// </summary>
-        List<Product> GetAll();
+        List<Property> GetAll();
 
         /// <summary>
         /// Add
         /// </summary>
-        void Add(Product requestModel);
+        void Add(Property requestModel);
 
         /// <summary>
         /// Update
         /// </summary>
-        void Update(Product requestModel);
+        void Update(Property requestModel);
 
         /// <summary>
         /// Delete
         /// </summary>
-        void Delete(int productId);
-
-        /// <summary>
-        /// Add Property
-        /// </summary>
-        void AddProperty(ProductProperty requestModel);
+        void Delete(int propertyId);
     }
 }

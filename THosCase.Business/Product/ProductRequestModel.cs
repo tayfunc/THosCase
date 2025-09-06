@@ -1,6 +1,7 @@
 ﻿namespace THosCase.Business.RequestModel
 {
     using System;
+    using System.Collections.Generic;
     using System.Web;
 
     /// <summary>
@@ -52,5 +53,10 @@
         /// Creator User Id
         /// </summary>
         public int CreatorUserId { get; set; }
+
+        /// <summary>
+        /// Product Properties
+        /// </summary>
+        public string ProductProperties { get; set; }
     }
 }

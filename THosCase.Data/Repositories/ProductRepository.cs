@@ -28,6 +28,13 @@
             _context.SaveChanges();
         }
 
+        public void AddProperty(ProductProperty requestModel)
+        {
+            _context.ProductProperties.Add(requestModel);
+
+            _context.SaveChanges();
+        }
+
         /// <summary>
         /// Delete
         /// </summary>

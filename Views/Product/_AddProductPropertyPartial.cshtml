@@ -1,0 +1,31 @@
+﻿@model THosCase.Business.RequestModel.ProductRequestModel
+
+<div class="modal fade" id="addPropertyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yeni Özellik Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addPropertyForm">
+                    <div class="mb-3">
+                        <label for="addPropertyId" class="form-label">Özellik</label>
+                        <select class="form-control" id="addPropertyId" name="PropertyId" required>
+                            <option value="0">-- Kategori Seçin --</option>
+                            @foreach (var property in ViewBag.Properties as List<THosCase.Business.PropertyModel>)
+                            {
+                                <option value="@property.PropertyId">@property.PropertyKey - @property.PropertyValue</option>
+                            }
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-success" id="addProductProperty">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>

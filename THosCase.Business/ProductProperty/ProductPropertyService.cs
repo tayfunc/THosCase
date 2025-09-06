@@ -1,13 +1,9 @@
 ﻿namespace THosCase.Business.ProductProperty
 {
     using AutoMapper;
-
-    using System.Collections.Generic;
-
     using THosCase.Business.Abstraction;
     using THosCase.Business.Intefaces;
     using THosCase.Business.RequestModel;
-
     using THosCase.Data.Context;
     using THosCase.Data.Interfaces;
 
@@ -30,7 +26,7 @@
         {
             var mappingConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<ProductRequestModel, ProductProperty>();
+                cfg.CreateMap<ProductPropertyRequestModel, ProductProperty>();
                 cfg.CreateMap<ProductProperty, ProductPropertyModel>();
             });
 
@@ -40,14 +36,7 @@
 
             _productPropertyRepository.Add(productPropertyDto);
 
-            var productProperty = _productPropertyRepository.Get(productPropertyDto.ProductPropertyId);
-
-            if (productProperty == null)
-            {
-                return ServiceResult.Failed<ProductPropertyModel>(ServiceError.ProductPropertyAddFailed);
-            }
-
-            ProductPropertyModel productPropertyModel = mapper.Map<ProductPropertyModel>(productProperty);
+            ProductPropertyModel productPropertyModel = mapper.Map<ProductPropertyModel>(productPropertyDto);
 
             return ServiceResult.Success(productPropertyModel);
         }
@@ -70,55 +59,20 @@
         }
 
         /// <summary>
-        /// Get
+        /// Get By Product Id
         /// </summary>
-        public ServiceResult<ProductPropertyModel> Get(int productPropertyId)
-        {
-            var productProperty = _productPropertyRepository.Get(productPropertyId);
-
-            var mappingConfig = new MapperConfiguration(cfg => cfg.CreateMap<ProductProperty, ProductPropertyModel>());
-
-            var mapper = mappingConfig.CreateMapper();
-
-            ProductPropertyModel productPropertyModel = mapper.Map<ProductPropertyModel>(productProperty);
-
-            return ServiceResult.Success(productPropertyModel);
-        }
-
-        /// <summary>
-        /// Get All
-        /// </summary>
-        public ServiceResult<List<ProductPropertyModel>> GetAll()
-        {
-            var productProperties = _productPropertyRepository.GetAll();
-
-            var mappingConfig = new MapperConfiguration(cfg => cfg.CreateMap<ProductProperty, ProductPropertyModel>());
-
-            var mapper = mappingConfig.CreateMapper();
-
-            List<ProductPropertyModel> productPropertyModels = mapper.Map<List<ProductPropertyModel>>(productProperties);
-
-            return ServiceResult.Success(productPropertyModels);
-        }
-
-        /// <summary>
-        /// Update
-        /// </summary>
-        public ServiceResult<ProductPropertyModel> Update(ProductPropertyRequestModel requestModel)
+        public ServiceResult<ProductPropertyModel> GetByProductId(int productId)
         {
             var mappingConfig = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<ProductPropertyRequestModel, ProductProperty>();
                 cfg.CreateMap<ProductProperty, ProductPropertyModel>();
             });
 
             var mapper = mappingConfig.CreateMapper();
 
-            ProductProperty productPropertyDto = mapper.Map<ProductProperty>(requestModel);
+            var productProperties = _productPropertyRepository.GetByProductId(productId);
 
-            _productPropertyRepository.Update(productPropertyDto);
-
-            ProductPropertyModel productPropertyModel = mapper.Map<ProductPropertyModel>(productPropertyDto);
+            ProductPropertyModel productPropertyModel = mapper.Map<ProductPropertyModel>(productProperties);
 
             return ServiceResult.Success(productPropertyModel);
         }

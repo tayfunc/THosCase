@@ -24,6 +24,18 @@
                             }
                         </select>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="addPropertyId" class="form-label">Özellik</label>
+                        <select class="form-control" id="addPropertyId" name="PropertyId" required="false" multiple="multiple">
+                            <option value="0">-- Özellik Seçin --</option>
+                            @foreach (var property in ViewBag.Properties as List<THosCase.Business.PropertyModel>)
+                            {
+                                <option value="@property.PropertyId">@property.PropertyKey - @property.PropertyValue</option>
+                            }
+                        </select>
+                    </div>
+
                     <div class="mb-3">
                         <label for="productPrice" class="form-label">Fiyat</label>
                         <input type="number" class="form-control" id="addProductPrice" name="Price" required>

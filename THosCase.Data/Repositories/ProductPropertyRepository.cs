@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using THosCase.Data.Context;
     using THosCase.Data.Interfaces;
 
@@ -28,13 +29,35 @@
         }
 
         /// <summary>
+        /// Add Range
+        /// </summary>
+        public void AddRange(List<ProductProperty> requestModel)
+        {
+            _context.ProductProperties.AddRange(requestModel);
+
+            _context.SaveChanges();
+        }
+
+        /// <summary>
         /// Delete
         /// </summary>
         public void Delete(int productPropertyId)
         {
             var productProperty = _context.ProductProperties.FirstOrDefault(x => x.ProductPropertyId == productPropertyId);
-
+            
             _context.ProductProperties.Remove(productProperty);
+
+            _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Delete By Product Id
+        /// </summary>
+        public void DeleteByProductId(int productId)
+        {
+            var productProperties = _context.ProductProperties.Where(x => x.ProductId == productId).ToList();
+
+            _context.ProductProperties.RemoveRange(productProperties);
 
             _context.SaveChanges();
         }
@@ -48,24 +71,11 @@
         }
 
         /// <summary>
-        /// Get All
+        /// Get By Product Id
         /// </summary>
-        public List<ProductProperty> GetAll()
+        public List<ProductProperty> GetByProductId(int productId)
         {
-            return _context.ProductProperties.ToList();
-        }
-
-        /// <summary>
-        /// Update
-        /// </summary>
-        public void Update(ProductProperty requestModel)
-        {
-            var product = _context.ProductProperties.FirstOrDefault(x => x.ProductPropertyId == requestModel.ProductPropertyId);
-
-            product.ProductId = requestModel.ProductId;
-            product.ProductPropertyId = requestModel.ProductPropertyId;
-
-            _context.SaveChanges();
+            return _context.ProductProperties.Where(x=> x.ProductId == productId).ToList();
         }
     }
 }

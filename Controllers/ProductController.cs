@@ -18,11 +18,19 @@
 
         private readonly ICategoryService _categoryService;
 
-        public ProductController(IProductService productService, ICategoryService categoryService)
+        private readonly IPropertyService _propertyService;
+
+        private readonly IProductPropertyService _productPropertyService;
+
+        public ProductController(IProductService productService, ICategoryService categoryService, IPropertyService propertyService, IProductPropertyService productPropertyService)
         {
             _productService = productService;
 
             _categoryService = categoryService;
+
+            _propertyService = propertyService;
+
+            _productPropertyService = productPropertyService;
         }
 
         // GET: Product
@@ -32,14 +40,19 @@
 
             var categories = _categoryService.GetAll();
 
+            var properties = _propertyService.GetAll();
+
             var vmProduct = new ProductViewModel
             {
                 Products = products.Data,
                 Categories = categories.Data,
+                Properties = properties.Data,
                 PageTitle = "Ürünler"
             };
 
             ViewBag.Categories = categories.Data;
+
+            ViewBag.Properties = properties.Data;
 
             return View(vmProduct);
         }
@@ -47,21 +60,44 @@
         [HttpGet]
         public ActionResult Add()
         {
-            // Parent kategorileri dropdown için hazırla
             var productServResult = _productService.GetAll();
 
             var categories = _categoryService.GetAll();
+
+            var properties = _propertyService.GetAll();
 
             var vmCategory = new ProductViewModel
             {
                 Products = productServResult.Data,
                 Categories= categories.Data,
+                Properties = properties.Data,
                 PageTitle = "Ürünler"
             };
 
             ViewBag.Categories = categories.Data;
+            
+            ViewBag.Properties = properties.Data;
 
             return PartialView("_AddProductPartial");
+        }
+
+        [HttpGet]
+        public ActionResult AddProductProperty()
+        {
+            var productServResult = _productService.GetAll();
+
+            var properties = _propertyService.GetAll();
+
+            var vmCategory = new ProductViewModel
+            {
+                Products = productServResult.Data,
+                Properties = properties.Data,
+                PageTitle = "Özellikler"
+            };
+
+            ViewBag.Properties = properties.Data;
+
+            return PartialView("_AddProductPropertyPartial");
         }
 
         [HttpPost]
@@ -78,6 +114,29 @@
                     }
 
                     ServiceResult result = _productService.Add(requestModel);
+
+                    if (!result.Succeeded)
+                        TempData["SuccessMessage"] = result.Error.Message;
+
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Kayıt sırasında hata oluştu: " + ex.Message);
+                }
+            }
+
+            return View(requestModel);
+        }
+
+        [HttpPost]
+        public ActionResult AddProperty(ProductPropertyRequestModel requestModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    ServiceResult result = _productPropertyService.Add(requestModel);
 
                     if (!result.Succeeded)
                         TempData["SuccessMessage"] = result.Error.Message;

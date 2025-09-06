@@ -98,6 +98,7 @@
     </Compile>
     <Compile Include="DTOs\UserDto.cs" />
     <Compile Include="Interfaces\IProductPropertyRepository.cs" />
+    <Compile Include="Interfaces\IPropertyRepository.cs" />
     <Compile Include="Interfaces\IProductRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Repositories\CategoryRepository.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Interfaces\ICategoryRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\ProductPropertyRepository.cs" />
+    <Compile Include="Repositories\PropertyRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
   </ItemGroup>

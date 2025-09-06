@@ -1,11 +1,5 @@
 ﻿namespace THosCase.Business
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// Product Property Model
     /// </summary>
@@ -17,14 +11,14 @@
         public int ProductPropertyId { get; set; }
 
         /// <summary>
-        /// Product Id
+        /// Product Property Id
         /// </summary>
         public int ProductId { get; set; }
 
         /// <summary>
         /// Product Name
         /// </summary>
-        public int ProductName { get; set; }
+        public string ProductName { get; set; }
 
         /// <summary>
         /// Property Id
@@ -34,6 +28,6 @@
         /// <summary>
         /// Property Name
         /// </summary>
-        public int PropertyName { get; set; }
+        public string PropertyName { get; set; }
     }
 }

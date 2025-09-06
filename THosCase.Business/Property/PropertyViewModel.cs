@@ -3,20 +3,10 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Product View Model
+    /// Property View Model
     /// </summary>
-    public class ProductViewModel
+    public class PropertyViewModel
     {
-        /// <summary>
-        /// Products
-        /// </summary>
-        public List<ProductModel> Products { get; set; }
-
-        /// <summary>
-        /// Categories
-        /// </summary>
-        public List<CategoryModel> Categories { get; set; }
-
         /// <summary>
         /// Properties
         /// </summary>

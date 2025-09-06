@@ -165,7 +165,7 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
-    <Compile Include="Controllers\ProductPropertyController.cs" />
+    <Compile Include="Controllers\PropertyController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -229,7 +229,9 @@
     <Content Include="Views\User\_AddUserPartial.cshtml" />
     <Content Include="Views\Product\_AddProductPartial.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
-    <Content Include="Views\ProductProperty\_AddProductPropertyPartial.cshtml" />
+    <Content Include="Views\Property\Index.cshtml" />
+    <Content Include="Views\Property\_AddPropertyPartial.cshtml" />
+    <Content Include="Views\Product\_AddProductPropertyPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

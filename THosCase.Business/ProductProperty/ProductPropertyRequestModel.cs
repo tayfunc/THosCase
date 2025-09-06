@@ -6,11 +6,6 @@
     public class ProductPropertyRequestModel
     {
         /// <summary>
-        /// Product Property Id
-        /// </summary>
-        public int ProductPropertyId { get; set; }
-
-        /// <summary>
         /// Product Id
         /// </summary>
         public int ProductId { get; set; }
