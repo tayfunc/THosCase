@@ -120,6 +120,7 @@
     <Compile Include="Abstraction\ServiceError.cs" />
     <Compile Include="Abstraction\ServiceResult.cs" />
     <Compile Include="Abstraction\ServiceSuccessResult.cs" />
+    <Compile Include="Account\LoginModel.cs" />
     <Compile Include="Category\CategoryRequestModel.cs" />
     <Compile Include="Category\CategoryModel.cs" />
     <Compile Include="Category\CategoryService.cs" />

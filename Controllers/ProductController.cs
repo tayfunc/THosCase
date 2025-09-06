@@ -6,12 +6,13 @@
     using System.Linq;
     using System.Web;
     using System.Web.Mvc;
-
+    
     using THosCase.Business.Abstraction;
     using THosCase.Business.Intefaces;
     using THosCase.Business.RequestModel;
     using THosCase.Business.ViewModel;
 
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

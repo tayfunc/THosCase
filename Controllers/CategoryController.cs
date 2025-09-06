@@ -2,14 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web.Mvc;
+    
     using THosCase.Business;
     using THosCase.Business.Abstraction;
+    using THosCase.Business.Intefaces;
     using THosCase.Business.RequestModel;
     using THosCase.Business.ViewModel;
-    using THosCase.Business.Intefaces;
-    using System.Linq;
 
+    [Authorize]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;

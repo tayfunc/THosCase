@@ -117,5 +117,33 @@
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// Validate
+        /// </summary>
+        public bool Validate(string userName, string password)
+        {
+            using (SqlConnection sqlConn = new SqlConnection(ConfigurationManager.ConnectionStrings["THosDefault"].ConnectionString))
+            {
+                if (sqlConn.State != System.Data.ConnectionState.Open)
+                {
+                    sqlConn.Open();
+                }
+
+                using (SqlCommand sqlCmd = new SqlCommand("spValidateUser", sqlConn))
+                {
+                    sqlCmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+                    sqlCmd.Parameters.AddWithValue("Username", userName);
+                    sqlCmd.Parameters.AddWithValue("Password", password);
+
+                    var isValid = sqlCmd.ExecuteScalar();
+
+                    return ((int)isValid == 1 ? true : false);
+                }
+            }
+
+            
+        }
     }
 }

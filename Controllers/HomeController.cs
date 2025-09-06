@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace THosCase.Controllers
+﻿namespace THosCase.Controllers
 {
+    using System.Web.Mvc;
+
+    [Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()

@@ -34,5 +34,10 @@
         /// Delete
         /// </summary>
         void Delete(int userId);
+
+        /// <summary>
+        /// Validate
+        /// </summary>
+        bool Validate(string userName, string password);
     }
 }

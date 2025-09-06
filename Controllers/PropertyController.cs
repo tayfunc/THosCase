@@ -9,9 +9,7 @@
     using THosCase.Business.RequestModel;
     using THosCase.Business.ViewModel;
 
-    /// <summary>
-    /// Product Property Controller
-    /// </summary>
+    [Authorize]
     public class PropertyController : Controller
     {
         private readonly IPropertyService _propertyService;

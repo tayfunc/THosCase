@@ -138,5 +138,22 @@
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// Validate
+        /// </summary>
+        public ServiceResult Validate(LoginModel requestModel)
+        {
+            var isValid = _userRepository.Validate(requestModel.Username, requestModel.Password);
+
+            if (isValid)
+            {
+                return ServiceResult.Success();
+            }
+            else
+            {
+                return ServiceResult.Failed(ServiceError.UserNotFound);
+            }
+        }
     }
 }

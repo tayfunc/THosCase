@@ -33,5 +33,10 @@
         /// Delete
         /// </summary>
         ServiceResult Delete(int userId);
+
+        /// <summary>
+        /// Delete
+        /// </summary>
+        ServiceResult Validate(LoginModel requestModel);
     }
 }

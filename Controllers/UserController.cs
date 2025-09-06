@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Web.Mvc;
-
+    
     using THosCase.Business.Abstraction;
     using THosCase.Business.Intefaces;
     using THosCase.Business.RequestModel;
     using THosCase.Business.ViewModel;
 
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

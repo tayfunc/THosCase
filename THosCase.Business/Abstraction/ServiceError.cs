@@ -41,5 +41,7 @@
         public static ServiceError PropertyDeleteFailed => new ServiceError("Özellik silme işleminde hata", 984);
 
         public static ServiceError ProductPropertyDeleteFailed => new ServiceError("Ürün silme işleminde hata", 983);
+
+        public static ServiceError UserNotFound => new ServiceError("Kullanıcı bulunamadı", 982);
     }
 }
