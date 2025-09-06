@@ -1,0 +1,274 @@
+﻿@using System.Linq;
+
+@model THosCase.Business.ViewModel.ProductViewModel
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@Model.PageTitle</h3>
+
+<button type="button" class="btn btn-primary" id="addNewProduct">
+    <i class="fas fa-plus"></i> Yeni Ürün Ekle
+</button>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Ürün Adı</th>
+            <th>Kategori Adı</th>
+            <th>Fiyat</th>
+            <th>Ürün Görseli</th>
+            <th>Silinmiş</th>
+            <th>Oluşturma Tarihi</th>
+            <th>Kaydı Oluşturan Kullanıcı</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.ProductId</td>
+                <td>@product.ProductName</td>
+                <td>
+                    @(product.CategoryId > 0 && Model.Categories.Any(x=> x.CategoryId == product.CategoryId) ? Model.Categories.FirstOrDefault(x => x.CategoryId == product.CategoryId).CategoryName : "-")
+                </td>
+                <td>@product.Price</td>
+                <td><img src="~/Uploads/Images/@product.ImagePath" alt="@product.ProductName" width="75" /></td>
+                <td>@(product.IsDeleted ? "Evet" : "Hayır")</td>
+                <td>@product.CreatedDate</td>
+                <td>@product.CreatorUserName</td>
+                <td>
+                    <!-- Güncelle Butonu - Modal tetikleyici -->
+                    <button type="button" class="btn btn-warning btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateModal"
+                            data-id="@product.ProductId"
+                            data-name="@product.ProductName"
+                            data-category-id="@product.CategoryId"
+                            data-price="@product.Price">
+                        <i class="fas fa-edit"></i> Güncelle
+                    </button>
+
+                    <!-- Sil Butonu -->
+                    <button type="button" class="btn btn-danger btn-sm delete-btn"
+                            data-id="@product.ProductId"
+                            data-product-name="@product.ProductName">
+                        <i class="fas fa-trash"></i> Sil
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Güncelleme Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ürün Güncelle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm">
+                    <input type="hidden" id="productId" name="ProductId" />
+
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Ürün Adı</label>
+                        <input type="text" class="form-control" id="productName" name="ProductName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="categoryId" class="form-label">Kategori</label>
+                        <select class="form-control" id="categoryId" name="CategoryId">
+                            <option value="0">-- Kategori Seçin --</option>
+                            @foreach (var category in ViewBag.Categories as List<THosCase.Business.CategoryModel>)
+                            {
+                                <option value="@category.CategoryId">@category.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Fiyat</label>
+                        <input type="number" class="form-control" id="productPrice" name="ProductPrice" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="productImage" class="form-label">Ürün Görseli</label>
+                        <input type="file" class="form-control" id="productImage" name="ProductImage" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" id="saveChanges">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS ve Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@section Scripts {
+    <script>
+        // Yeni kategori ekle butonu
+        $('#addNewProduct').click(function () {
+            // Modal içeriğini AJAX ile yükle
+            $.ajax({
+                url: '@Url.Action("Add", "Product")',
+                type: 'GET',
+                success: function (data) {
+                    // Eğer modal zaten varsa kaldır
+                    if ($('#addModal').length) {
+                        $('#addModal').remove();
+                    }
+
+                    $('body').append(data);
+
+                    $('#addModal').modal('show');
+
+                    $('#addProduct').off('click').on('click', function () {
+                        //$('#addForm').serialize()
+                        //var formData = {
+                        //    "ProductName": $("#addForm #addProductName").val(),
+                        //    "CategoryId": $("#addForm #addCategoryId").val(),
+                        //    "Price": $("#addForm #addProductPrice").val(),
+                        //    "ImagePath": $("#addForm #addProductImage").val()
+                        //};
+
+                        var formData = new FormData();
+
+                        formData.append('ProductName', $('#addForm #addProductName').val());
+                        formData.append('CategoryId', $('#addForm #addCategoryId').val());
+                        formData.append('Price', $('#addForm #addProductPrice').val());
+                        formData.append('ImagePath', $('#addForm #addProductImage').val());
+
+                        var fileInput = $('#addForm #addProductImage')[0];
+                        if (fileInput.files.length > 0) {
+                            formData.append('ImageFile', fileInput.files[0]);
+                        }
+
+                        $.ajax({
+                            url: '@Url.Action("Add", "Product")',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                $('#addModal').modal('hide');
+                                location.reload();
+                            },
+                            error: function (xhr, status, error) {
+                                var errorMessage = xhr.responseJSON.errors.join('\n');
+
+                                alert('Bir hata oluştu!\n\n' + errorMessage);
+                            }
+                        });
+                    });
+                },
+                error: function () {
+                    alert('Form yüklenirken hata oluştu!');
+                }
+            });
+        });
+
+        // Modal kapandığında temizle
+        $('body').on('hidden.bs.modal', '#addModal', function () {
+            $(this).remove();
+        });
+
+        // Modal açıldığında verileri doldur
+        $('#updateModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var productId = button.data('id');
+            var productName = button.data('name');
+            var categoryId = button.data('category-id');
+            var price = button.data('price');
+
+            var modal = $(this);
+            modal.find('#productId').val(productId);
+            modal.find('#productName').val(productName);
+            modal.find('#categoryId').val(categoryId);
+            modal.find('#productPrice').val(price);
+        });
+
+        // Kaydet butonu click event
+        $('#saveChanges').click(function () {
+            //var formData = {
+            //    "ProductId": $("#updateForm #productId").val(),
+            //    "ProductName": $("#updateForm #productName").val(),
+            //    "CategoryId": $("#updateForm #categoryId").val(),
+            //    "Price": $("#updateForm #productPrice").val(),
+            //    "ImagePath": $("#updateForm #productImage").val()
+            //};
+
+            var formData = new FormData();
+
+            formData.append('ProductId', $('#updateForm #productId').val());
+            formData.append('ProductName', $('#updateForm #productName').val());
+            formData.append('CategoryId', $('#updateForm #categoryId').val());
+            formData.append('Price', $('#updateForm #productPrice').val());
+            formData.append('ImagePath', $('#updateForm #productImage').val());
+
+            var fileInput = $('#updateForm #productImage')[0];
+            if (fileInput.files.length > 0) {
+                formData.append('ImageFile', fileInput.files[0]);
+            }
+
+            $.ajax({
+                url: '@Url.Action("Update", "Product")',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    $('#updateModal').modal('hide');
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    var errorMessage = xhr.responseJSON.errors.join('\n');
+
+                    alert('Bir hata oluştu!\n\n' + errorMessage);
+                }
+            });
+        });
+
+        // Sil butonu click event
+        $('.delete-btn').click(function () {
+            var productId = $(this).data('id');
+            var productName = $(this).data('product-name');
+
+            if (confirm(productName + ' ürününü silmek istediğinize emin misiniz?')) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Product")',
+                    type: 'POST',
+                    data: { id: productId },
+                    success: function (response) {
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        var errorMessage = xhr.responseJSON.errors.join('\n');
+
+                        alert('Bir hata oluştu!\n\n' + errorMessage);
+                    }
+                });
+            }
+        });
+    </script>
+}
